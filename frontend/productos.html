@@ -1,0 +1,83 @@
+  <!DOCTYPE html>
+  <html lang="es">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema KFE - Punto de Venta</title>
+    <link rel="stylesheet" href="css/styles.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+   
+
+  </head>
+
+  <body>
+    <header class="header">
+      <div class="logo-container">
+        <img src="src/logo.png" alt="Logo KFE" class="logo">
+        <h1 class="title">SISTEMA KFE</h1>
+      </div>
+    </header>
+
+    <nav class="nav-bar">
+      <ul class="nav-list">
+        <li><a href="index.html" class="nav-link active"><i class="fa-solid fa-cart-shopping" style="color: #6d4808;"></i> Punto de Venta</a></li>
+        <li><a href="productos.html" class="nav-link"><i class="fa-solid fa-mug-saucer" style="color: #6d4808;" ></i>Productos</a></li>
+        <li><a href="#" class="nav-link"><i class="fa-solid fa-chart-simple" style="color: #6d4808;"></i> Ventas</a></li>
+      </ul>
+    </nav>
+
+   <section class="product-admin">
+  <div class="header-container">
+    <h2 class="section-title">Lista de Productos</h2>
+    <button class="btn-add-product">+ Nuevo Producto</button>
+  </div>
+
+  <div class="table-container">
+    <table class="product-table">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Precio</th>
+          <th>Stock</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="product-table-body">
+        <!-- Aquí se renderizan los productos dinámicamente -->
+      </tbody>
+    </table>
+  </div>
+</section>
+  
+  <div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <h3>Agregar Nuevo Producto</h3>
+    <form id="form-producto">
+      <label>
+        Nombre del producto:
+        <input type="text" id="nombre" required />
+      </label>
+      <label>
+        Precio:
+        <input type="number" id="precio" min="1" required />
+      </label>
+      <label>
+        Stock:
+        <input type="number" id="stock" min="1" required />
+      </label>
+      <div class="modal-actions">
+        <button type="submit" class="btn-confirm">Guardar</button>
+        <button type="button" class="btn-cancel" id="btn-cancelar">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+   
+  
+   <script type="module"  src="./js/producto.js"></script>
+  </body>
+
+  </html>
+ 

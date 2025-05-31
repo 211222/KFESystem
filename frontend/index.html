@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sistema KFE - Punto de Venta</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+  <header class="header">
+    <div class="logo-container">
+      <img src="src/logo.png" alt="Logo KFE" class="logo">
+      <h1 class="title">SISTEMA KFE</h1>
+    </div>
+  </header>
+
+  <nav class="nav-bar">
+    <ul class="nav-list">
+      <li><a href="venta.html" class="nav-link active"><i class="fa-solid fa-cart-shopping"></i> Punto de Venta</a></li>
+      <li><a href="productos.html" class="nav-link"><i class="fa-solid fa-mug-saucer"></i> Productos</a></li>
+      <li><a href="#" class="nav-link"><i class="fa-solid fa-chart-simple"></i> Ventas</a></li>
+    </ul>
+  </nav>
+
+  <main class="main-container">
+    <!-- Sección de productos -->
+    <section class="product-section">
+      <h2 class="section-title">Productos disponibles</h2>
+      <div class="product-grid">
+        <!-- Se renderiza con JS -->
+      </div>
+    </section>
+
+    <!-- Sección del carrito -->
+    <aside class="cart-section">
+      <h2 class="section-title">Carrito de Compras</h2>
+      <div class="cart-items">
+        <!-- Se renderiza con JS -->
+      </div>
+      <div class="cart-summary">
+        <p><strong>Total:</strong> <span class="cart-total">$0.00</span></p>
+        <button id="btn-comprar" class="btn-buy">Procesar Compra</button>
+      </div>
+    </aside>
+  </main>
+
+  <script src="./js/venta.js"></script>
+</body>
+</html>
