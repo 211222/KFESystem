@@ -45,3 +45,13 @@ exports.delete = async (req, res) => {
   }
 };
 
+exports.getMasVendidos = async (req, res) => {
+  try {
+    const productos = await productoModel.obtenerMasVendidos();
+    res.json(productos);
+  } catch (error) {
+    console.error('Error al obtener productos más vendidos:', error);
+    res.status(500).json({ error: 'Error del servidor' });
+  }
+};
+

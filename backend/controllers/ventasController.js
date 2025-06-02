@@ -8,28 +8,28 @@ exports.crearVenta = async (req, res) => {
     return res.status(400).json({ message: 'La venta debe tener al menos un producto.' });
   }
 
+  for (const producto of productos) {
+    if (!producto.producto_id) {
+      return res.status(400).json({ message: `Falta el ID de un producto: ${JSON.stringify(producto)}` });
+    }
+  }
+
   const connection = await db.getConnection();
 
   try {
     await connection.beginTransaction();
 
-    // Crear la venta y obtener el id
     const ventaId = await ventasModel.crearVenta(connection);
-
-    // Insertar los detalles de la venta
     await ventasModel.insertarDetallesVenta(connection, ventaId, productos);
 
-    // Actualizar el stock de cada producto
     for (const producto of productos) {
       const stockActual = await ventasModel.obtenerStockProducto(connection, producto.producto_id);
-
       if (stockActual === undefined) {
         throw new Error(`Producto con id ${producto.producto_id} no existe`);
       }
       if (stockActual < producto.cantidad) {
         throw new Error(`Stock insuficiente para el producto id ${producto.producto_id}`);
       }
-
       await ventasModel.actualizarStock(connection, producto.producto_id, producto.cantidad);
     }
 

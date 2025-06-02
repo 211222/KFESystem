@@ -44,3 +44,25 @@ exports.delete = async (id) => {
   }
 };
 
+
+
+
+
+exports.obtenerMasVendidos = async () => {
+  const query = `
+     SELECT p.id, p.nombre, SUM(dv.cantidad) AS cantidadVendida
+    FROM detalles_venta dv
+    INNER JOIN productos p ON p.id = dv.producto_id
+    GROUP BY dv.producto_id
+    ORDER BY cantidadVendida DESC
+    LIMIT 3
+  `;
+  try {
+    const [rows] = await db.query(query);
+    return rows;
+  } catch (error) {
+    console.error('Error en modelo al obtener más vendidos:', error);
+    throw error;
+  }
+};
+
