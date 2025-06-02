@@ -1,36 +1,29 @@
-// venta.js
 
-// ==============================
-// VARIABLES GLOBALES
-// ==============================
 
 let productos = [];
 let carrito = [];
+let stockTemporal = []; 
 
-// ==============================
-// CARGAR PRODUCTOS DEL BACKEND
-// ==============================
 
 async function cargarProductos() {
   try {
-    const res = await fetch('http://localhost:3000/api/productos/');
+    const res = await fetch('http://localhost:3000/api/productos/', { cache: "no-store" });
     productos = await res.json();
+    stockTemporal = productos.map(p => ({ ...p }));
     renderizarProductos();
   } catch (error) {
     console.error('Error al cargar productos:', error);
-    alert('No se pudieron cargar los productos.');
   }
 }
 
-// ==============================
-// RENDERIZAR PRODUCTOS EN LA VISTA
-// ==============================
 
+
+// RENDERIZAR PRODUCTOS EN LA VISTA
 function renderizarProductos() {
   const contenedor = document.querySelector('.product-grid');
   contenedor.innerHTML = '';
 
-  productos.forEach(p => {
+  stockTemporal.forEach(p => {
     const card = document.createElement('article');
     card.className = 'product-card';
     card.innerHTML = `
@@ -43,35 +36,32 @@ function renderizarProductos() {
   });
 }
 
-// ==============================
-// AGREGAR PRODUCTO AL CARRITO
-// ==============================
 
 function agregarAlCarrito(id) {
-  const producto = productos.find(p => p.id === id);
-  if (!producto || producto.stock <= 0) {
+  const productoOriginal = productos.find(p => p.id === id);
+  if (!productoOriginal || productoOriginal.stock <= 0) {
     alert('Producto sin stock disponible.');
     return;
   }
 
-  const item = carrito.find(c => c.id === id);
+  const item = carrito.find(c => c.producto_id === id);
   if (item) {
-    if (item.cantidad < producto.stock) {
-      item.cantidad++;
-    } else {
-      alert('No hay más stock disponible.');
-    }
+    item.cantidad++;
   } else {
-    carrito.push({ ...producto, cantidad: 1 });
+    carrito.push({ producto_id: productoOriginal.id, nombre: productoOriginal.nombre, precio: productoOriginal.precio, cantidad: 1 });
   }
 
+  productoOriginal.stock--;
   renderizarCarrito();
+  renderizarProductos();
 }
 
-// ==============================
-// RENDERIZAR CARRITO EN LA VISTA
-// ==============================
 
+
+
+
+
+// RENDERIZAR CARRITO EN LA VISTA
 function renderizarCarrito() {
   const contenedor = document.querySelector('.cart-items');
   contenedor.innerHTML = '';
@@ -99,69 +89,66 @@ function renderizarCarrito() {
   document.querySelector('.cart-total').textContent = `$${total.toFixed(2)}`;
 }
 
-// ==============================
-// CAMBIAR CANTIDAD DE UN PRODUCTO
-// ==============================
 
+// CAMBIAR CANTIDAD DE UN PRODUCTO
 function cambiarCantidad(id, cambio) {
   const item = carrito.find(i => i.id === id);
-  const producto = productos.find(p => p.id === id);
+  const visual = stockTemporal.find(p => p.id === id);
 
-  if (!item || !producto) return;
+  if (!item || !visual) return;
 
-  const nuevaCantidad = item.cantidad + cambio;
-
-  if (nuevaCantidad > producto.stock) {
-    alert('No hay suficiente stock.');
+  if (cambio === 1 && visual.stock <= 0) {
+    alert('No hay más stock disponible.');
     return;
   }
 
-  if (nuevaCantidad <= 0) {
+  if (cambio === 1) {
+    item.cantidad++;
+    visual.stock--;
+  } else if (cambio === -1) {
+    item.cantidad--;
+    visual.stock++;
+  }
+
+  if (item.cantidad <= 0) {
     carrito = carrito.filter(i => i.id !== id);
-  } else {
-    item.cantidad = nuevaCantidad;
   }
 
   renderizarCarrito();
+  renderizarProductos();
 }
 
-// ==============================
+
+
 // PROCESAR COMPRA Y ACTUALIZAR STOCK
-// ==============================
-
 async function procesarCompra() {
-  if (carrito.length === 0) {
-    alert('No hay productos en el carrito.');
-    return;
-  }
-
+  //console.log("Productos a enviar:", carrito); // Verifica los datos antes de enviarlos
   try {
-    for (const item of carrito) {
-      const nuevoStock = item.stock - item.cantidad;
+    const res = await fetch('http://localhost:3000/api/ventas/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ productos: carrito })
+    });
 
-      await fetch(`http://localhost:3000/productos/${item.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ stock: nuevoStock })
-      });
-    }
-
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
+    
     carrito = [];
+
+    await new Promise(resolve => setTimeout(resolve, 500));
     await cargarProductos();
     renderizarCarrito();
-    alert('¡Compra realizada exitosamente!');
+    alert('¡Compra procesada exitosamente!');
   } catch (error) {
     console.error('Error al procesar la compra:', error);
-    alert('Error al procesar la compra.');
+    alert(`Error: ${error.message}`);
   }
 }
 
-// ==============================
-// INICIALIZACIÓN AL CARGAR LA PÁGINA
-// ==============================
 
+
+
+// INICIALIZACIÓN AL CARGAR LA PÁGINA
 document.addEventListener('DOMContentLoaded', () => {
   cargarProductos();
 
@@ -169,4 +156,32 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnBuy) {
     btnBuy.addEventListener('click', procesarCompra);
   }
+});
+
+
+async function cargarMasVendidos() {
+  try {
+    const res = await fetch('http://localhost:3000/api/productos/mas-vendidos');
+    const data = await res.json();
+
+    const tbody = document.getElementById('tabla-mas-vendidos');
+    tbody.innerHTML = '';
+
+    data.forEach((producto, index) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${producto.nombre}</td>
+        <td>${producto.cantidadVendida}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  } catch (error) {
+    console.error('Error al cargar los más vendidos:', error);
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  cargarProductos();
+  cargarMasVendidos(); 
 });

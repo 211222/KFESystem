@@ -346,3 +346,22 @@ body {
   font-weight: bold;
   cursor: pointer;
 }
+
+
+
+/*ventas*/
+.sellers-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+.sellers-table th, .sellers-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+.top-sellers h2 {
+  margin-top: 2rem;
+  font-size: 1.25rem;
+}
+

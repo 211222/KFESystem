@@ -27,7 +27,7 @@ function renderProductos(productos) {
       <td>${producto.stock} Unidades</td>
       <td>
         <button class="btn-action edit" onclick="editarProducto(${producto.id}, '${producto.nombre}', ${producto.precio}, ${producto.stock})">✏️</button>
-        <button class="btn-action delete" onclick="eliminarProducto(${producto.id})">🗑️</button>
+        
       </td>
     `;
     tabla.appendChild(fila);
@@ -106,20 +106,3 @@ obtenerProductos();
 
 
 
-let productos = [];
-let carrito = [];
-
-// ==============================
-// CARGAR PRODUCTOS DEL BACKEND
-// ==============================
-
-async function cargarProductos() {
-  try {
-    const res = await fetch('http://localhost:3000/api/productos/');
-    productos = await res.json();
-    renderizarProductos();
-  } catch (error) {
-    console.error('Error al cargar productos:', error);
-    alert('No se pudieron cargar los productos.');
-  }
-}

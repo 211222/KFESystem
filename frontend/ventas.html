@@ -1,0 +1,52 @@
+  <!DOCTYPE html>
+  <html lang="es">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema KFE - Punto de Venta</title>
+    <link rel="stylesheet" href="css/styles.css">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+   
+
+  </head>
+
+  <body>
+    <header class="header">
+      <div class="logo-container">
+        <img src="src/logo.png" alt="Logo KFE" class="logo">
+        <h1 class="title">SISTEMA KFE</h1>
+      </div>
+    </header>
+
+    <nav class="nav-bar">
+      <ul class="nav-list">
+        <li><a href="index.html" class="nav-link "><i class="fa-solid fa-cart-shopping" style="color: #6d4808;"></i> Punto de Venta</a></li>
+        <li><a href="productos.html" class="nav-link"><i class="fa-solid fa-mug-saucer" style="color: #6d4808;" ></i>Productos</a></li>
+        <li><a href="#" class="nav-link"><i class="fa-solid fa-chart-simple" style="color: #6d4808;"></i> Ventas</a></li>
+      </ul>
+    </nav>
+
+<section class="top-sellers">
+  <h2>Top 3 Productos Más Vendidos</h2>
+  <table class="sellers-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Producto</th>
+        <th>Cantidad Vendida</th>
+      </tr>
+    </thead>
+    <tbody id="tabla-mas-vendidos">
+      
+    </tbody>
+  </table>
+</section>
+
+   
+  
+   <script type="module"  src="./js/venta.js"></script>
+  </body>
+
+  </html>
+ 
